@@ -1087,14 +1087,72 @@ async function loadProfileCursor() {
 function toggleStartMenu() {
   const m = document.getElementById("start-menu");
   if (m.style.display === "none") {
-    m.style.display = isMobile() ? "flex" : "block";
+    m.style.display = "flex";
     playClick("menu");
+    // No mobile o foco abriria o teclado virtual por cima do menu.
+    if (!isMobile()) document.getElementById("start-menu-search").focus();
   } else {
-    m.style.display = "none";
+    closeStartMenu();
   }
 }
 function closeStartMenu() {
   document.getElementById("start-menu").style.display = "none";
+  resetStartMenu();
+}
+
+// ─── Pesquisa / "Ver tudo" do menu Iniciar ────────────────────────────────────
+// O menu tem três estados, controlados por classes em #start-menu:
+//   (nenhuma)    só os itens [data-pinned]
+//   .show-all    lista completa, com seções e scroll
+//   .searching   só os itens que batem com a pesquisa (marcados com .match)
+function normalizeSearchText(text) {
+  return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+}
+
+function startMenuButtons() {
+  return document.querySelectorAll("#start-menu-items > button");
+}
+
+function filterStartMenu(query) {
+  const m = document.getElementById("start-menu");
+  const q = normalizeSearchText(query);
+  m.classList.toggle("searching", q !== "");
+  let matches = 0;
+  startMenuButtons().forEach((btn) => {
+    const match = q !== "" && normalizeSearchText(btn.textContent).includes(q);
+    btn.classList.toggle("match", match);
+    if (match) matches++;
+  });
+  m.classList.toggle("no-results", q !== "" && matches === 0);
+}
+
+function onStartMenuSearchKey(e) {
+  if (e.key === "Enter") {
+    const first = document.querySelector("#start-menu-items > button.match");
+    if (first) first.click();
+  } else if (e.key === "Escape") {
+    if (e.target.value) {
+      e.target.value = "";
+      filterStartMenu("");
+    } else {
+      closeStartMenu();
+    }
+  }
+}
+
+function toggleStartMenuAll(show) {
+  const m = document.getElementById("start-menu");
+  const showAll = typeof show === "boolean" ? show : !m.classList.contains("show-all");
+  m.classList.toggle("show-all", showAll);
+  document.getElementById("start-menu-toggle-all").textContent = showAll ? "◂ Voltar" : "📂 Ver tudo ▸";
+  document.getElementById("start-menu-items").scrollTop = 0;
+}
+
+function resetStartMenu() {
+  const input = document.getElementById("start-menu-search");
+  if (input) input.value = "";
+  filterStartMenu("");
+  toggleStartMenuAll(false);
 }
 document.addEventListener("click", (e) => {
   if (!e.target.closest(".start-menu") && !e.target.closest(".start-btn")) closeStartMenu();
@@ -4124,9 +4182,20 @@ function showAchievementToast(achievementIds) {
 const RELEASE_NOTES_SEEN_KEY = "luizos_release_notes_seen";
 const RELEASE_NOTES = [
   {
-    version: "2.28.0",
+    version: "2.29.0",
     date: "25/10/2026",
     isNew: true,
+    title: "Menu Iniciar com pesquisa 🔍",
+    items: [
+      "🔍 O Menu Iniciar ganhou uma barra de pesquisa: digite o nome de um app ou jogo e aperte Enter para abrir o primeiro resultado (Esc limpa a busca).",
+      "📌 Agora o menu mostra só o essencial. Sudoku Diário e Termo Diário aparecem ali enquanto estiverem pendentes.",
+      "📂 O botão \"Ver tudo\" mostra a lista completa, separada por seções e com scroll.",
+    ],
+  },
+  {
+    version: "2.28.0",
+    date: "25/10/2026",
+    isNew: false,
     title: "Modo Escuro 🔦",
     items: [
       "🔦 Novo Modo Escuro: reduz a luminosidade de todo o LuizOS 95 e mantém iluminada apenas a área ao redor do ponteiro, para mais conforto visual em ambientes com pouca luz.",

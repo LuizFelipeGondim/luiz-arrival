@@ -143,7 +143,7 @@ body {
   position: fixed;
   bottom: 34px;
   left: 2px;
-  width: 200px;
+  width: 220px;
   background: var(--win-gray);
   box-shadow: var(--shadow-out);
   z-index: 1001;
@@ -162,20 +162,48 @@ body {
   writing-mode: vertical-rl;
   text-orientation: mixed;
   transform: rotate(180deg);
-  height: 120px;
+  align-self: stretch;
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  float: left;
+  flex-shrink: 0;
+}
+
+.start-menu-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.start-menu-search {
+  padding: 6px 6px 4px;
+}
+
+.start-menu-search input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 3px 5px;
+  font-family: inherit;
+  font-size: 12px;
+  background: white;
+  border: 2px solid var(--win-dark);
+  border-right-color: var(--win-white);
+  border-bottom-color: var(--win-white);
+  outline: none;
 }
 
 .start-menu-items {
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  max-height: min(60vh, 420px);
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
-.start-menu-items button {
+.start-menu-items button,
+.start-menu-footer button,
+.start-menu-toggle-all {
   background: transparent;
   border: none;
   text-align: left;
@@ -185,15 +213,63 @@ body {
   font-size: 12px;
 }
 
-.start-menu-items button:hover {
+.start-menu-items button:hover,
+.start-menu-footer button:hover,
+.start-menu-toggle-all:hover {
   background: var(--win-blue);
   color: white;
 }
 
-.start-menu-items hr {
+.start-menu-footer {
+  display: flex;
+  flex-direction: column;
+}
+
+.start-menu-main hr {
   border: none;
   border-top: 1px solid var(--win-dark);
   margin: 2px 8px;
+}
+
+/* Estados do menu (ver filterStartMenu/toggleStartMenuAll em app.js): por
+   padrão só o essencial + puzzles diários pendentes (com bolinha). */
+.start-menu-items > button,
+.start-menu-section,
+.start-menu-empty {
+  display: none;
+}
+
+.start-menu:not(.searching) .start-menu-items > button[data-pinned],
+.start-menu:not(.searching) .start-menu-items > button:has(.sdd-badge-dot.show, .tdd-badge-dot.show),
+.start-menu.show-all:not(.searching) .start-menu-items > button,
+.start-menu.searching .start-menu-items > button.match {
+  display: block;
+}
+
+.start-menu.show-all:not(.searching) .start-menu-section {
+  display: block;
+  padding: 6px 12px 2px;
+  font-size: 10px;
+  font-weight: bold;
+  color: var(--win-dark);
+  text-transform: uppercase;
+  border-top: 1px solid var(--win-dark);
+}
+
+.start-menu.show-all:not(.searching) .start-menu-section:first-child {
+  border-top: none;
+}
+
+.start-menu.no-results .start-menu-empty {
+  display: block;
+  padding: 6px 12px;
+  font-size: 12px;
+  color: var(--win-dark);
+  font-style: italic;
+}
+
+.start-menu.searching .start-menu-toggle-all {
+  display: none;
 }
 
 /* ─── DESKTOP ─────────────────────────────── */
@@ -3009,10 +3085,7 @@ body.cursor-wait * {
   }
 
   .start-menu-header {
-    float: none;        /* anula o float do desktop */
-    height: auto;
-    min-height: 100%;
-    align-self: stretch;
+    align-self: stretch; /* min-height: 100% aqui estourava a altura do menu */
     width: 28px;
     min-width: 28px;
     padding: 8px 4px;
@@ -3032,16 +3105,22 @@ body.cursor-wait * {
        vazia scrollável) e passa a scrollar só quando ultrapassa o limite */
     flex: none;
     width: 100%;
-    max-height: calc(100vh - 80px);
+    max-height: calc(100vh - 230px); /* sobra espaço p/ pesquisa, "Ver tudo" e rodapé */
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     touch-action: pan-y;
   }
 
   /* Alvos de toque maiores para mobile */
-  .start-menu-items button {
+  .start-menu-items button,
+  .start-menu-footer button,
+  .start-menu-toggle-all {
     padding: 10px 10px;
     font-size: 13px;
+  }
+
+  .start-menu-search input {
+    font-size: 16px; /* < 16px faz o iOS dar zoom ao focar */
   }
 
   /* ─── DESKTOP / WALLPAPER ────────────────── */

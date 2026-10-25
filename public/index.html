@@ -74,43 +74,58 @@
   </div>
 
   <!-- START MENU -->
+  <!-- Por padrão só aparecem os itens com data-pinned (o essencial). "Ver tudo"
+       mostra a lista completa com scroll; a pesquisa filtra a lista completa. -->
   <div class="start-menu" id="start-menu" style="display:none">
     <div class="start-menu-header"><span>LuizOS 95</span></div>
-    <div class="start-menu-items">
-      <button onclick="openWindow('win-guess'); closeStartMenu()">🎯 Fazer Aposta</button>
-      <button onclick="openWindow('win-today'); closeStartMenu(); loadToday()">📋 Apostas abertas</button>
-      <button onclick="openWindow('win-history'); closeStartMenu(); loadHistory()">📅 Histórico</button>
-      <button onclick="openWindow('win-rank'); closeStartMenu(); loadOverallRank()">🏆 Ranking</button>
-      <button onclick="openWindow('win-register'); closeStartMenu()">👤 Novo Usuário</button>
-      <button onclick="openStore(); closeStartMenu()">🛒 Loja</button>
-      <button onclick="openAchievements(); closeStartMenu()">🏅 Conquistas</button>
-      <button onclick="openProfileWindow(); closeStartMenu()">🧑‍🎨 Perfil</button>
-      <button onclick="openRequestsWindow(); closeStartMenu()">📬 Tickets</button>
-      <button onclick="openReleaseNotes(); closeStartMenu()">📰 Novidades</button>
-      <button onclick="openWindow('win-scoring-rules'); closeStartMenu()">📐 Regras de Pontuação</button>
+    <div class="start-menu-main">
+      <div class="start-menu-search">
+        <input type="text" id="start-menu-search" placeholder="🔍 Pesquisar..." autocomplete="off"
+               oninput="filterStartMenu(this.value)" onkeydown="onStartMenuSearchKey(event)" />
+      </div>
+      <div class="start-menu-items" id="start-menu-items">
+        <div class="start-menu-section">Principal</div>
+        <button data-pinned onclick="openWindow('win-guess'); closeStartMenu()">🎯 Fazer Aposta</button>
+        <button data-pinned onclick="openWindow('win-today'); closeStartMenu(); loadToday()">📋 Apostas abertas</button>
+        <button data-pinned onclick="openWindow('win-history'); closeStartMenu(); loadHistory()">📅 Histórico</button>
+        <button data-pinned onclick="openWindow('win-rank'); closeStartMenu(); loadOverallRank()">🏆 Ranking</button>
+        <button data-pinned onclick="openStore(); closeStartMenu()">🛒 Loja</button>
+        <button data-pinned onclick="openProfileWindow(); closeStartMenu()">🧑‍🎨 Perfil</button>
+        <button onclick="openAchievements(); closeStartMenu()">🏅 Conquistas</button>
+        <button onclick="openWindow('win-register'); closeStartMenu()">👤 Novo Usuário</button>
+        <button onclick="openRequestsWindow(); closeStartMenu()">📬 Tickets</button>
+        <button onclick="openReleaseNotes(); closeStartMenu()">📰 Novidades</button>
+        <button onclick="openWindow('win-scoring-rules'); closeStartMenu()">📐 Regras de Pontuação</button>
+        <div class="start-menu-section">Cassino</div>
+        <button onclick="openBlackjackWindow(); closeStartMenu()">🃏 Luiz21</button>
+        <button onclick="openRouletteWindow(); closeStartMenu()">🎡 Roleta</button>
+        <button onclick="openSlotWindow(); closeStartMenu()">🎰 Luiz Slot</button>
+        <div class="start-menu-section">Jogos</div>
+        <button onclick="openFarmWindow(); closeStartMenu()">🌾 LuizFarm 95</button>
+        <button onclick="openWindow('win-snake'); initSnakeGame(); closeStartMenu()">🐍 Snake 95</button>
+        <button onclick="openWindow('win-aimtrainer'); initAimTrainerGame(); closeStartMenu()">🔫 Aim Trainer</button>
+        <button onclick="openMinesweeperWindow(); closeStartMenu()">💣 Campo Minado</button>
+        <button onclick="openSudokuWindow(); closeStartMenu()">🔢 Sudoku</button>
+        <button onclick="openSudokuDailyWindow(); closeStartMenu()">📅 Sudoku Diário<span class="sdd-badge-dot"></span></button>
+        <button onclick="openTermoDailyWindow(); closeStartMenu()">🟩 Termo Diário<span class="tdd-badge-dot"></span></button>
+        <button onclick="openWindow('win-2048'); init2048Game(); closeStartMenu()">🧩 2048</button>
+        <button onclick="openDoomWindow(); closeStartMenu()">👹 DOOM (1993)</button>
+        <button data-pinned onclick="openWindow('win-gamerank'); loadGameRank('snake'); closeStartMenu()">🎮 Rank Jogos</button>
+        <div class="start-menu-section">Acessórios</div>
+        <button onclick="openNotepadWindow(); closeStartMenu()">📝 Bloco de Notas</button>
+        <button onclick="openCalculatorWindow(); closeStartMenu()">🧮 Calculadora</button>
+        <button onclick="openPaintWindow(); closeStartMenu()">🎨 Paint 95</button>
+        <div class="start-menu-section">Sistema</div>
+        <button onclick="openWindow('win-admin'); closeStartMenu()">🔒 Admin</button>
+        <div class="start-menu-empty">Nenhum resultado</div>
+      </div>
+      <button class="start-menu-toggle-all" id="start-menu-toggle-all" onclick="toggleStartMenuAll()">📂 Ver tudo ▸</button>
       <hr />
-      <button onclick="openWindow('win-admin'); closeStartMenu()">🔒 Admin</button>
-      <button onclick="openFarmWindow(); closeStartMenu()">🌾 LuizFarm 95</button>
-      <button onclick="openBlackjackWindow(); closeStartMenu()">🃏 Luiz21</button>
-      <button onclick="openRouletteWindow(); closeStartMenu()">🎡 Roleta</button>
-      <button onclick="openSlotWindow(); closeStartMenu()">🎰 Luiz Slot</button>
-      <button onclick="openWindow('win-snake'); initSnakeGame(); closeStartMenu()">🐍 Snake 95</button>
-      <button onclick="openWindow('win-aimtrainer'); initAimTrainerGame(); closeStartMenu()">🔫 Aim Trainer</button>
-      <button onclick="openMinesweeperWindow(); closeStartMenu()">💣 Campo Minado</button>
-      <button onclick="openSudokuWindow(); closeStartMenu()">🔢 Sudoku</button>
-      <button onclick="openSudokuDailyWindow(); closeStartMenu()">📅 Sudoku Diário<span class="sdd-badge-dot"></span></button>
-      <button onclick="openTermoDailyWindow(); closeStartMenu()">🟩 Termo Diário<span class="tdd-badge-dot"></span></button>
-      <button onclick="openWindow('win-2048'); init2048Game(); closeStartMenu()">🧩 2048</button>
-      <button onclick="openDoomWindow(); closeStartMenu()">👹 DOOM (1993)</button>
-      <button onclick="openWindow('win-gamerank'); loadGameRank('snake'); closeStartMenu()">🎮 Rank Jogos</button>
-      <hr />
-      <button onclick="openNotepadWindow(); closeStartMenu()">📝 Bloco de Notas</button>
-      <button onclick="openCalculatorWindow(); closeStartMenu()">🧮 Calculadora</button>
-      <button onclick="openPaintWindow(); closeStartMenu()">🎨 Paint 95</button>
-      <button onclick="toggleFlashlightMode(); closeStartMenu()"><span class="flashlight-toggle-label">🔦 Modo Escuro</span></button>
-      <button id="hardmode-menu-btn" onclick="closeStartMenu(); toggleHardMode()">💀 Modo Difícil: OFF</button>
-      <hr />
-      <button onclick="openWindow('win-login'); closeStartMenu()">🔑 Login / Trocar Conta</button>
+      <div class="start-menu-footer">
+        <button onclick="toggleFlashlightMode(); closeStartMenu()"><span class="flashlight-toggle-label">🔦 Modo Escuro</span></button>
+        <button id="hardmode-menu-btn" onclick="closeStartMenu(); toggleHardMode()">💀 Modo Difícil: OFF</button>
+        <button onclick="openWindow('win-login'); closeStartMenu()">🔑 Login / Trocar Conta</button>
+      </div>
     </div>
   </div>
 
