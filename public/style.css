@@ -3174,3 +3174,8 @@ body.cursor-wait * {
     height: 6px;
   }
 }
+/* ─── MODO DIFÍCIL ────────────────────────── */
+body.hard-mode #hardmode-menu-btn {
+  color: #a00000;
+  font-weight: bold;
+}

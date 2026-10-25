@@ -108,6 +108,7 @@
       <button onclick="openCalculatorWindow(); closeStartMenu()">🧮 Calculadora</button>
       <button onclick="openPaintWindow(); closeStartMenu()">🎨 Paint 95</button>
       <button onclick="toggleFlashlightMode(); closeStartMenu()"><span class="flashlight-toggle-label">🔦 Modo Escuro</span></button>
+      <button id="hardmode-menu-btn" onclick="closeStartMenu(); toggleHardMode()">💀 Modo Difícil: OFF</button>
       <hr />
       <button onclick="openWindow('win-login'); closeStartMenu()">🔑 Login / Trocar Conta</button>
     </div>
@@ -1638,6 +1639,7 @@
   <script src="js/calculator.js"></script>
   <script src="js/paint.js"></script>
   <script src="js/flashlight.js"></script>
+  <script src="js/hardmode.js"></script>
   <script>
     function setGameRankTabActive(game) {
       document.querySelectorAll('#win-gamerank .rank-tab').forEach(t => {
