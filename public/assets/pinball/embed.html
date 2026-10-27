@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>3D Pinball for Windows - Space Cadet</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+    html, body {
+      width: 600px;
+      height: 440px;
+      overflow: hidden;
+      background: #000;
+      font-family: Tahoma, "MS Sans Serif", sans-serif;
+      color: #fff;
+    }
+    #canvas {
+      width: 600px;
+      height: 440px;
+      display: block;
+      border: 0 none;
+      background-color: #000;
+      outline: none;
+    }
+  </style>
+</head>
+<body>
+  <canvas class="emscripten" id="canvas" width="600" height="440" oncontextmenu="event.preventDefault()" tabindex="-1"></canvas>
+  <script>
+    // Mapeia também Seta Esquerda/Direita e '/' ou ';' (teclado ABNT2) para os flippers
+    // originais (Z e Slash), sem alterar o comportamento das teclas padrão.
+    (function installFlipperAliases() {
+      function patchKey(e, code, key, keyCode) {
+        try {
+          Object.defineProperty(e, "code", { get: () => code });
+          Object.defineProperty(e, "key", { get: () => key });
+          Object.defineProperty(e, "keyCode", { get: () => keyCode });
+          Object.defineProperty(e, "which", { get: () => keyCode });
+        } catch {}
+      }
+      function onKey(e) {
+        if (e.code === "ArrowLeft") {
+          patchKey(e, "KeyZ", "z", 90);
+        } else if (e.code === "ArrowRight" || e.key === "/" || e.key === ";") {
+          patchKey(e, "Slash", "/", 191);
+        }
+      }
+      window.addEventListener("keydown", onKey, true);
+      window.addEventListener("keyup", onKey, true);
+    })();
+
+    // Repassa a posição do ponteiro para a janela pai (para o Modo Escuro / lanterna
+    // e para trazer a janela do Pinball para frente ao clicar).
+    window.addEventListener("pointermove", function (e) {
+      try {
+        if (window.parent && window.parent !== window && window.frameElement) {
+          const rect = window.frameElement.getBoundingClientRect();
+          const scaleX = rect.width / 600 || 1;
+          const scaleY = rect.height / 440 || 1;
+          window.parent.document.dispatchEvent(new PointerEvent("pointermove", {
+            clientX: rect.left + e.clientX * scaleX,
+            clientY: rect.top + e.clientY * scaleY,
+            bubbles: true
+          }));
+        }
+      } catch {}
+    }, { passive: true });
+
+    window.addEventListener("pointerdown", function () {
+      try {
+        window.focus();
+        const c = document.getElementById("canvas");
+        if (c) c.focus();
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({ type: "pinball-focus" }, "*");
+        }
+      } catch {}
+    }, { passive: true });
+
+    function notifyStatus(text, ready) {
+      try {
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({ type: "pinball-status", text: text || "", ready: !!ready }, "*");
+        }
+      } catch {}
+    }
+
+    var Module = {
+      preRun: [],
+      postRun: [function () {
+        notifyStatus("", true);
+        var c = document.getElementById("canvas");
+        if (c) c.focus();
+      }],
+      print: function () {},
+      printErr: function (text) {
+        console.error(text);
+      },
+      canvas: (function () {
+        var canvas = document.getElementById("canvas");
+        canvas.addEventListener("webglcontextlost", function (e) {
+          e.preventDefault();
+          notifyStatus("❌ Contexto gráfico perdido. Feche e abra a janela novamente.", false);
+        }, false);
+        return canvas;
+      })(),
+      setStatus: function (text) {
+        if (!Module.setStatus.last) Module.setStatus.last = { time: Date.now(), text: "" };
+        if (text === Module.setStatus.last.text) return;
+        var m = text.match(/([^(]+)\((\d+(\.\d+)?)\/(\d+)\)/);
+        var now = Date.now();
+        if (m && now - Module.setStatus.last.time < 30) return;
+        Module.setStatus.last.time = now;
+        Module.setStatus.last.text = text;
+        if (m) {
+          var pct = Math.round((parseFloat(m[2]) / parseFloat(m[4])) * 100);
+          notifyStatus("⏳ Carregando 3D Pinball Space Cadet... (" + pct + "%)", false);
+        } else if (!text) {
+          notifyStatus("", true);
+        } else {
+          notifyStatus("⏳ " + text, false);
+        }
+      },
+      totalDependencies: 0,
+      monitorRunDependencies: function (left) {
+        this.totalDependencies = Math.max(this.totalDependencies, left);
+        if (left) {
+          Module.setStatus("Preparando recursos... (" + (this.totalDependencies - left) + "/" + this.totalDependencies + ")");
+        } else {
+          Module.setStatus("");
+        }
+      }
+    };
+
+    Module.setStatus("Carregando 3D Pinball Space Cadet...");
+    window.onerror = function () {
+      notifyStatus("❌ Erro ao iniciar o 3D Pinball Space Cadet.", false);
+    };
+  </script>
+  <script async src="SpaceCadetPinball.js"></script>
+</body>
+</html>

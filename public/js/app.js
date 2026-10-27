@@ -4182,9 +4182,19 @@ function showAchievementToast(achievementIds) {
 const RELEASE_NOTES_SEEN_KEY = "luizos_release_notes_seen";
 const RELEASE_NOTES = [
   {
+    version: "2.30.0",
+    date: "26/10/2026",
+    isNew: true,
+    title: "Novo jogo clássico: 3D Pinball Space Cadet 🛸",
+    items: [
+      "🛸 O clássico 3D Pinball for Windows - Space Cadet (original do Windows XP / Plus!) agora roda completo dentro do LuizOS 95, com física, trilha sonora e efeitos originais.",
+      "🕹️ Acesso pelo Menu Iniciar, grade de aplicativos ou pasta \"Jogos\" — jogue livremente sem custo de fichas usando Z/← e //→ (ou ;) para os flippers e Espaço para lançar a bola.",
+    ],
+  },
+  {
     version: "2.29.0",
     date: "25/10/2026",
-    isNew: true,
+    isNew: false,
     title: "Menu Iniciar com pesquisa 🔍",
     items: [
       "🔍 O Menu Iniciar ganhou uma barra de pesquisa: digite o nome de um app ou jogo e aperte Enter para abrir o primeiro resultado (Esc limpa a busca).",
