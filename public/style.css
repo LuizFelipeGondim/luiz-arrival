@@ -1352,6 +1352,23 @@ body.cursor-wait * {
   outline: none;
 }
 
+/* ─── 3D PINBALL SPACE CADET ─────────────── */
+.canvas-container.pinball-container {
+  width: 604px;
+  height: 444px;
+  background: #000;
+  overflow: hidden;
+  position: relative;
+}
+
+.pinball-iframe {
+  width: 600px !important;
+  height: 440px !important;
+  display: block;
+  border: 0;
+  outline: none;
+}
+
 #at-canvas {
   background-color: var(--win-black);
   /* Mira pequena estilo FPS (cruz fina com vão no centro) no lugar do

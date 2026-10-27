@@ -110,6 +110,7 @@
         <button onclick="openTermoDailyWindow(); closeStartMenu()">🟩 Termo Diário<span class="tdd-badge-dot"></span></button>
         <button onclick="openWindow('win-2048'); init2048Game(); closeStartMenu()">🧩 2048</button>
         <button onclick="openDoomWindow(); closeStartMenu()">👹 DOOM (1993)</button>
+        <button onclick="openPinballWindow(); closeStartMenu()">🛸 3D Pinball</button>
         <button data-pinned onclick="openWindow('win-gamerank'); loadGameRank('snake'); closeStartMenu()">🎮 Rank Jogos</button>
         <div class="start-menu-section">Acessórios</div>
         <button onclick="openNotepadWindow(); closeStartMenu()">📝 Bloco de Notas</button>
@@ -224,6 +225,10 @@
     <div class="appgrid-icon" onclick="openDoomWindow()">
       <div class="icon-img">👹</div>
       <div class="icon-label">DOOM (1993)</div>
+    </div>
+    <div class="appgrid-icon" onclick="openPinballWindow()">
+      <div class="icon-img">🛸</div>
+      <div class="icon-label">3D Pinball</div>
     </div>
     <div class="appgrid-icon" onclick="openWindow('win-gamerank'); loadGameRank('snake')">
       <div class="icon-img">🎮</div>
@@ -970,6 +975,26 @@
     </div>
   </div>
 
+  <!-- ══ WINDOW: 3D PINBALL SPACE CADET ══ -->
+  <div class="win95-window" id="win-pinball" style="left:120px;top:30px;width:628px;display:none">
+    <div class="win95-titlebar" onmousedown="startDrag(event,'win-pinball')">
+      <span class="win95-title">🛸 3D Pinball for Windows - Space Cadet</span>
+      <div class="win95-controls">
+        <button class="win95-btn-ctrl" onclick="minimizeWindow('win-pinball')">_</button>
+        <button class="win95-btn-ctrl" onclick="closeWindow('win-pinball'); stopPinballGame()">✕</button>
+      </div>
+    </div>
+    <div class="win95-body">
+      <div id="pinball-status" class="info-box" style="font-size:12px;margin-bottom:6px;text-align:center;display:none"></div>
+      <div class="game-zoom-target">
+        <div class="canvas-container pinball-container" id="pinball-container"></div>
+      </div>
+      <div class="info-box" style="font-size:11px;margin-top:6px">
+        <strong>Controles:</strong> <strong>ESPAÇO</strong> (segurar e soltar) = Lançar Bola | <strong>Z</strong> ou <strong>←</strong> = Flipper Esquerdo | <strong>/</strong>, <strong>;</strong> ou <strong>→</strong> = Flipper Direito | <strong>X</strong> / <strong>.</strong> / <strong>↑</strong> = Chacoalhar Mesa (Tilt) | <strong>F2</strong> = Novo Jogo | <strong>F3</strong> = Pausar.
+      </div>
+    </div>
+  </div>
+
   <!-- ══ WINDOW: BLOCO DE NOTAS ══ -->
   <div class="win95-window notepad-window" id="win-notepad" style="left:220px;top:70px;width:480px;height:420px;display:none">
     <!-- openWindow() força style.display="block" inline no elemento da janela
@@ -1460,6 +1485,10 @@
           <div class="icon-img">👹</div>
           <div class="icon-label">DOOM (1993)</div>
         </div>
+        <div class="folder-icon" ondblclick="openPinballWindow()">
+          <div class="icon-img">🛸</div>
+          <div class="icon-label">3D Pinball</div>
+        </div>
       </div>
     </div>
   </div>
@@ -1645,6 +1674,7 @@
   <script src="js/spider.js"></script>
   <script src="js/2048.js"></script>
   <script src="js/doom.js"></script>
+  <script src="js/pinball.js"></script>
   <script src="js/farm.js"></script>
   <script src="js/blackjack.js"></script>
   <script src="js/roulette.js"></script>
